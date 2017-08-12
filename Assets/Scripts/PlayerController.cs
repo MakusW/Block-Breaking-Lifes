@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour {
 	public float firingRate = 1.0f;
 	public float health = 250.0f;
 
+	public AudioClip fireSound;
+
 	float xmin;
 	float xmax;
 
@@ -25,9 +27,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Fire (){
-		Vector3 offset = new Vector3(0,1,0);
-		GameObject beam = Instantiate(projectile, transform.position+offset, Quaternion.identity) as GameObject;
+		GameObject beam = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
 		beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
+		AudioSource.PlayClipAtPoint(fireSound, transform.position);
 	}
 	
 	// Update is called once per frame
@@ -67,7 +69,11 @@ public class PlayerController : MonoBehaviour {
 	health -= missile.GetDamage();
 	missile.Hit();
 	if (health <= 0) {
-	Destroy(gameObject);}
+	LevelManager man = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+	man.LoadLevel("Win Screen");
+	Destroy(gameObject);
+
+	}
 		Debug.Log("Hit by a projectile");
 
 	}
